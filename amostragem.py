@@ -142,14 +142,17 @@ df.head()
 # %%
 
 """1. Realizar uma amostragem aleatória simples com 500 registros."""
+print("\n--- Amostragem Aleatória Simples ---")
 dez_sistematica = df.sample(n=500, random_state=56)
 
 """2. Criar uma amostragem sistemática escolhendo cada 10º registro."""
 dez_sistematica = df.iloc[::10, :]
+print("\n--- Amostragem Aleatória Sistemática ---")
 dez_sistematica.head()
 
 """3. Dividir a base em estratos por localização e selecionar amostras proporcionais."""
 div_estratificada, _ = train_test_split(df, test_size= 0.5, stratify=df["Localizacao"])     #test_size= 0.5  porcentagem de amostras de teste do df para locaização
+print("\n--- Amostragem Estratificada por Localização ---")
 div_estratificada.head()
 
 # %%
@@ -160,9 +163,10 @@ grupo_transacoes = transacoes_aleatorias.groupby("Fraude")
 transacoes_sem_fraude = grupo_transacoes.get_group(0)
 transacoes_fradulentas = grupo_transacoes.get_group(1)
 
+print("Transações Sem Fraude (Amostra):")
 transacoes_sem_fraude.head(10)
 #%%
-
+print("\nTransações Fraudulentas (Amostra):")
 transacoes_fradulentas.head()
 
 # %%
@@ -170,6 +174,7 @@ transacoes_fradulentas.head()
 
 jugamento_transacoes = df[(df['Renda'] > 5000)]
 
+print("\n--- Amostragem por Julgamento (Renda > R$5000) ---")
 jugamento_transacoes.sample(10)
 # %%
 
@@ -181,20 +186,36 @@ grupo_aleatorio = np.random.choice(['Compra', 'Transferencia', 'Pagamento'], 1 ,
 
 tipo_sorteado = grupo_tipo_transacao.get_group(grupo_aleatorio)
 print(f"O grupo sorteado foi o de : {grupo_aleatorio}")
+
+print(f"\n--- Amostragem por Conglomerados ---")
 tipo_sorteado.head()
 # %%
 """7. Executar uma amostragem por conveniência pegando os 300 primeiros registros."""
 
+print("\n--- Amostragem por Conveniência ---")
 amostra_conveniencia2 = df.head(300)
 
 #%% 
 """8. Criar uma amostragem por cotas considerando o tipo de transação e localização."""
 
 cotas_transacao_local = df.groupby(["Tipo_Transacao", "Localizacao"]).apply(lambda x: x.sample(frac=0.02)).reset_index(drop=True)
+print("\n--- Amostragem por Cotas (Transação e Localização) ---")
 cotas_transacao_local.head(35)
 
 # %%
 
 """9. Comparar os resultados das amostras aleatória e estratificada e explicar as diferenças."""
 
-# R:
+# R: Os resultados das amostras aleatórias nem sempre representam a população como um todo caso aja uma discrepança na quantidade dos individuos por cada grupo,
+# isso pode acabar gerando uma informação imprecisa. Por outro lado, a amostragem estratificada sempre garante que aja uma porcentagem de indíviduos de cada grupo 
+# sendo importante para as análises que necessitam de representação de todos os grupos
+
+aleatoria_sistematica = df.sample(n=50, random_state=56)
+print("\n--- Amostragem Aleatória Sistemática ---")
+aleatoria_sistematica.head()
+
+# %%
+estratificada, _ = train_test_split(df, test_size= 0.5, stratify=df["Localizacao"])     #test_size= 0.5  porcentagem de amostras de teste do df para locaização
+print("\n--- Amostragem Estratificada por Localização ---")
+estratificada.head()
+# %%
